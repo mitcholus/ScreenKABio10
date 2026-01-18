@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Klassenarbeit – Genetik (Kl. 10)</title>
+  <style>
+    :root{
+      --bg1:#061018;
+      --bg2:#1a0730;
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --line: rgba(255,255,255,.14);
+      --accent:#b56cff;
+      --accent2:#54d6ff;
+      --warn:#ffcc66;
+      --danger:#ff6b6b;
+      --ok:#38f0a0;
+      --shadow: 0 10px 28px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 650px at 20% 10%, rgba(181,108,255,.14), transparent 60%),
+        radial-gradient(900px 700px at 85% 25%, rgba(84,214,255,.12), transparent 60%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      padding: 22px;
+    }
+
+    .wrap{ max-width: 980px; margin:0 auto; display:grid; gap:16px; }
+
+    header{
+      padding:18px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+    }
+
+    h1{ margin:0; font-size:18px; font-weight:800; }
+    .sub{ font-size:13px; color:var(--muted); margin-top:4px; }
+
+    .grid{ display:grid; gap:16px; grid-template-columns:1.05fr .95fr; }
+    @media(max-width:860px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+
+    h2{
+      margin:0 0 10px 0;
+      font-size:14px;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .big{
+      font-variant-numeric:tabular-nums;
+      font-size:44px;
+      font-weight:900;
+      margin:0;
+      letter-spacing:.6px;
+      line-height:1.05;
+    }
+
+    /* Separation between clock + timer */
+    .timeBlock{ padding: 10px 12px; border-radius: 16px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.12); }
+    .divider{ height:1px; background: rgba(255,255,255,.12); margin: 14px 0; }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+
+    .progress{
+      height:12px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      overflow:hidden;
+      margin:10px 0 12px 0;
+    }
+
+    .bar{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      transform-origin:left;
+    }
+
+    button{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:800;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .btn-primary{
+      border-color: rgba(181,108,255,.45);
+      background: rgba(181,108,255,.12);
+    }
+    .btn-ghost{
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* WC: Make display bigger than button */
+    .wcWrap{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .wcDisplay{
+      flex: 1 1 320px;
+      min-width: 260px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+    }
+
+    .wcLeft{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:950;
+      letter-spacing:.3px;
+      font-size: 18px;
+    }
+
+    .dot{
+      width:14px; height:14px;
+      border-radius:999px;
+      background: var(--ok);
+      box-shadow: 0 0 0 6px rgba(56,240,160,.12);
+    }
+    .dot.busy{
+      background: var(--warn);
+      box-shadow: 0 0 0 6px rgba(255,204,102,.12);
+    }
+
+    .wcMeta{
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 700;
+      text-align:right;
+      line-height:1.2;
+    }
+
+    .wcBtn{
+      flex: 0 0 auto;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .wcBtn.free{
+      border-color: rgba(56,240,160,.40);
+      background: rgba(56,240,160,.12);
+    }
+    .wcBtn.busy{
+      border-color: rgba(255,204,102,.45);
+      background: rgba(255,204,102,.14);
+    }
+
+    ul{ padding-left:18px; line-height:1.55; margin: 10px 0 0 0; }
+    li{ margin:6px 0; }
+
+    .footer{
+      text-align:center;
+      font-size:12px;
+      color:rgba(255,255,255,.5);
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <h1>Klassenarbeit Genetik · Klasse 10</h1>
+    <div class="sub">Uhrzeit · Restarbeitszeit · Regeln · WC-Status</div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Zeit</h2>
+
+      <div class="timeBlock" aria-label="Uhrzeit">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div class="sub" style="margin:0 0 4px 0;">Aktuelle Uhrzeit</div>
+            <p class="big" id="clock">--:--:--</p>
+          </div>
+          <button class="btn-ghost" id="fsBtn" title="Vollbild (Safari/iPadOS)">Vollbild</button>
+        </div>
+      </div>
+
+      <div class="divider" role="presentation"></div>
+
+      <div class="timeBlock" aria-label="Timer">
+        <div class="sub" style="margin:0 0 4px 0;">Restarbeitszeit (60 Minuten)</div>
+        <p class="big" id="remaining">60:00</p>
+
+        <div class="progress"><div class="bar" id="bar"></div></div>
+
+        <div class="row">
+          <button class="btn-primary" id="start">Start</button>
+          <button class="btn-ghost" id="pause" disabled>Pause</button>
+          <button class="btn-ghost" id="reset">Reset</button>
+          <button class="btn-ghost" id="plus1">+1 min</button>
+          <button class="btn-ghost" id="minus1">-1 min</button>
+        </div>
+
+        <div class="sub" id="timerHint" style="margin-top:10px;">
+          Tippe auf <b>Start</b>, wenn du die Ausgabe der Arbeit beginnst.
+        </div>
+      </div>
+
+      <h2 style="margin-top:16px;">Toilette</h2>
+      <div class="wcWrap" aria-label="WC-Status">
+        <div class="wcDisplay" id="wcDisplay">
+          <div class="wcLeft">
+            <span class="dot" id="wcDot" aria-hidden="true"></span>
+            <span id="wcText">WC frei</span>
+          </div>
+          <div class="wcMeta" id="wcMeta">max. 1 Person<br>gleichzeitig</div>
+        </div>
+        <button class="wcBtn free" id="wcToggle" aria-pressed="false">WC belegen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Regeln</h2>
+      <ul>
+        <li><b>Handys & Smartwatches</b> nach vorne.</li>
+        <li><b>Taschen & Jacken</b> nicht am Platz.</li>
+        <li><b>Aufgaben vollständig lesen</b> und Zeit einteilen.</li>
+        <li><b>Still arbeiten</b>; bei Fragen Handzeichen.</li>
+        <li><b>Begründungen und Lösungswege</b> nachvollziehbar darstellen.</li>
+        <li>Nach Abgabe <b>leise beschäftigen</b>.</li>
+        <li><b>Toilette:</b> immer nur eine Person.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">Genetik · konzentriert · fair</div>
+</div>
+
+<script>
+  // CLOCK
+  const clockEl = document.getElementById("clock");
+  const pad = (n) => String(n).padStart(2, "0");
+  setInterval(() => {
+    const d = new Date();
+    clockEl.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }, 250);
+
+  // FULLSCREEN (best-effort in iPadOS Safari)
+  const fsBtn = document.getElementById("fsBtn");
+  fsBtn.addEventListener("click", async () => {
+    try{
+      if(document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    }catch(e){
+      // iPadOS Safari can restrict fullscreen; no-op if blocked
+    }
+  });
+
+  // TIMER
+  const remainingEl = document.getElementById("remaining");
+  const barEl = document.getElementById("bar");
+  const hintEl = document.getElementById("timerHint");
+
+  const startBtn = document.getElementById("start");
+  const pauseBtn = document.getElementById("pause");
+  const resetBtn = document.getElementById("reset");
+  const plus1Btn = document.getElementById("plus1");
+  const minus1Btn = document.getElementById("minus1");
+
+  const TOTAL_DEFAULT = 3600; // 60 min
+  let total = TOTAL_DEFAULT;
+
+  let running = false;
+  let endAt = null;      // timestamp ms
+  let pausedLeft = null; // seconds
+  let raf = null;
+
+  function formatMMSS(sec){
+    sec = Math.max(0, Math.round(sec));
+    const m = Math.floor(sec/60);
+    const s = sec % 60;
+    return `${pad(m)}:${pad(s)}`;
+  }
+
+  function getLeft(){
+    if(!running) return (pausedLeft !== null) ? pausedLeft : total;
+    return Math.max(0, (endAt - Date.now()) / 1000);
+  }
+
+  function updateHint(left){
+    if(left <= 0){
+      hintEl.innerHTML = `<b>Zeit ist um.</b> Bitte abgeben.`;
+    } else if(left <= 5*60){
+      hintEl.innerHTML = `<b>Letzte 5 Minuten.</b> Endcheck: Operatoren, saubere Darstellung, Name/Klasse/Datum.`;
+    } else if(left <= 10*60){
+      hintEl.innerHTML = `<b>Letzte 10 Minuten.</b> Begründungen ergänzen, Ergebnisse prüfen.`;
+    } else {
+      hintEl.innerHTML = `Konzentriert arbeiten. Bei Fragen: Handzeichen.`;
+    }
+  }
+
+  function render(){
+    const left = getLeft();
+    remainingEl.textContent = formatMMSS(left);
+    barEl.style.transform = `scaleX(${Math.max(0, Math.min(1, left / total))})`;
+    updateHint(left);
+
+    if(running && left > 0){
+      raf = requestAnimationFrame(render);
+    } else if(running && left <= 0){
+      stop(false);
+      try { navigator.vibrate && navigator.vibrate([160, 100, 160]); } catch(e){}
+    }
+  }
+
+  function start(){
+    if(running) return;
+    const left = getLeft();
+    pausedLeft = left;
+    endAt = Date.now() + left * 1000;
+    running = true;
+
+    startBtn.textContent = "Läuft…";
+    startBtn.disabled = true;
+    pauseBtn.disabled = false;
+
+    raf = requestAnimationFrame(render);
+  }
+
+  function stop(keepLeft=true){
+    if(!running){
+      render();
+      return;
+    }
+    const left = getLeft();
+    running = false;
+
+    if(raf) cancelAnimationFrame(raf);
+    raf = null;
+
+    pausedLeft = keepLeft ? left : null;
+    endAt = null;
+
+    startBtn.textContent = keepLeft ? "Weiter" : "Start";
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+  }
+
+  function reset(){
+    if(raf) cancelAnimationFrame(raf);
+    raf = null;
+    running = false;
+    endAt = null;
+    pausedLeft = null;
+    total = TOTAL_DEFAULT;
+
+    startBtn.textContent = "Start";
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+
+    remainingEl.textContent = "60:00";
+    barEl.style.transform = "scaleX(1)";
+    hintEl.innerHTML = `Tippe auf <b>Start</b>, wenn du die Ausgabe der Arbeit beginnst.`;
+  }
+
+  function adjust(delta){
+    if(running){
+      const left = getLeft() + delta;
+      endAt = Date.now() + Math.max(0, left) * 1000;
+    } else if(pausedLeft !== null){
+      pausedLeft = Math.max(0, pausedLeft + delta);
+    } else {
+      total = Math.max(60, total + delta);
+    }
+    render();
+  }
+
+  startBtn.addEventListener("click", start);
+  pauseBtn.addEventListener("click", () => stop(true));
+  resetBtn.addEventListener("click", reset);
+  plus1Btn.addEventListener("click", () => adjust(60));
+  minus1Btn.addEventListener("click", () => adjust(-60));
+
+  // Keyboard shortcuts (optional)
+  window.addEventListener("keydown", (e) => {
+    if(e.code === "Space"){
+      e.preventDefault();
+      if(running) stop(true); else start();
+    }
+    if(e.key === "r" || e.key === "R") reset();
+  });
+
+  // WC TOGGLE
+  const wcToggle = document.getElementById("wcToggle");
+  const wcText = document.getElementById("wcText");
+  const wcDot = document.getElementById("wcDot");
+
+  let wcBusy = false;
+
+  function renderWC(){
+    if(wcBusy){
+      wcText.textContent = "WC besetzt";
+      wcDot.classList.add("busy");
+      wcToggle.textContent = "WC freigeben";
+      wcToggle.classList.remove("free");
+      wcToggle.classList.add("busy");
+      wcToggle.setAttribute("aria-pressed","true");
+    } else {
+      wcText.textContent = "WC frei";
+      wcDot.classList.remove("busy");
+      wcToggle.textContent = "WC belegen";
+      wcToggle.classList.remove("busy");
+      wcToggle.classList.add("free");
+      wcToggle.setAttribute("aria-pressed","false");
+    }
+  }
+
+  wcToggle.addEventListener("click", () => {
+    wcBusy = !wcBusy;
+    renderWC();
+  });
+
+  renderWC();
+</script>
+</body>
+</html>
